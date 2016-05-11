@@ -1,7 +1,7 @@
 
 public class ConvertEquation {
 	
-	String equation; //A + B + CD'
+	String equation; //A’BC+AB+B’C’D
 	int qtdLinhas = 1;
 	boolean[] colunas = new boolean[4];
 	int qtdColunas = 0;
@@ -53,50 +53,41 @@ public class ConvertEquation {
 	}
 	
 	public char[][] analise(){
-		RelationMatrix m = new RelationMatrix(qtdLinhas, qtdColunas);
+		RelationMatrix m = new RelationMatrix(qtdLinhas, qtdColunas, true);
 		int l = 0;
 		for (int i = 0; i < equation.length(); i++) {
-			
 			if(equation.charAt(i) == '+')
 				l++;
 			
-			//caractere A
-			if(equation.charAt(i) == 'A' && (i+1) < equation.length() && equation.charAt(i+1) != '\''){
-				m.setDados(l,0,'1');
-			}else if(equation.charAt(i) == 'A' && equation.charAt(i+1) == '\''){
-				m.setDados(l,0,'0');
-			}else{
-				m.setDados(l,0,'x');
-			}
-			
-			//caractere B
-			if(equation.charAt(i) == 'B' && equation.charAt(i+1) != '\''){
-				m.setDados(l,1,'1');
-			}else if(equation.charAt(i) == 'B' && equation.charAt(i+1) == '\''){
-				m.setDados(l,1,'0');
-			}else{
-				m.setDados(l,1,'x');
-			}
-			
-			//caractere C
-			if(equation.charAt(i) == 'C' && equation.charAt(i+1) != '\''){
-				m.setDados(l,2,'1');
-			}else if(equation.charAt(i) == 'C' && equation.charAt(i+1) == '\''){
-				m.setDados(l,2,'0');
-			}else{
-				m.setDados(l,2,'x');
-			}
-			
-			//caractere D
-			if(equation.charAt(i) == 'D' && (i+1) < equation.length() && equation.charAt(i+1) != '\''){
-				m.setDados(l,3,'1');
-			}else if(equation.charAt(i) == 'D' && (i+1) < equation.length() && equation.charAt(i+1) == '\''){
-				m.setDados(l,3,'0');
-			}else{
-				m.setDados(l,3,'x');
+			switch (equation.charAt(i)) {
+				case 'A':
+					caractere(m,'A',0,i,l);
+					break;
+				case 'B':
+					caractere(m,'B',1,i,l);
+					break;
+				case 'C':
+					caractere(m,'C',2,i,l);
+					break;
+				case 'D':
+					caractere(m,'D',3,i,l);
+					break;
+				default:
+					break;
 			}
 		}
-		
 		return m.getMatrix();
+	}
+	
+	private void caractere(RelationMatrix m, char caractere, int coluna, int i, int l){
+		if((i+1) < equation.length()){
+			if(equation.charAt(i+1) != '\''){
+				m.setDados(l,coluna,'1');
+			}else if(equation.charAt(i+1) == '\''){
+				m.setDados(l,coluna,'0');
+			}else{
+				m.setDados(l,coluna,'x');
+			}
+		}
 	}
 }
